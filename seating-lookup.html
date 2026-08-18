@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>D R Junior College — Exam Seating</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16213E; --crimson:#B3122E; --paper:#EEF1F6; --paper-2:#FFFFFF;
+    --brass:#C89B3C; --green:#2F6F4E; --line:#D4DAE4;
+    --shadow: 0 18px 40px -18px rgba(22,33,62,0.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1100px 600px at 15% -10%, #E4E9F2 0%, transparent 60%),
+      radial-gradient(900px 500px at 110% 10%, #E9E2CF 0%, transparent 55%),
+      var(--paper);
+    color:var(--ink); font-family:'IBM Plex Sans', sans-serif;
+    min-height:100vh; display:flex; flex-direction:column; align-items:center;
+    padding:0 20px 60px;
+  }
+  .topbar{ width:100%; max-width:640px; display:flex; align-items:center; gap:14px; padding:34px 0 18px; }
+  .crest{
+    width:46px;height:46px;border-radius:50%; background:var(--ink);
+    display:flex;align-items:center;justify-content:center; flex:0 0 auto;
+    box-shadow: inset 0 0 0 2px rgba(255,255,255,0.15);
+  }
+  .crest svg{width:24px;height:24px;}
+  .brandtext{line-height:1.15;}
+  .brandtext .name{ font-family:'Fraunces', serif; font-weight:600; font-size:19px; letter-spacing:0.01em; }
+  .brandtext .tag{ font-size:12px; color:#5B6478; letter-spacing:0.04em; text-transform:uppercase; }
+
+  .hero{ width:100%;max-width:640px; margin-top:22px; text-align:left; }
+  .hero h1{
+    font-family:'Fraunces', serif; font-weight:700; font-size:clamp(30px, 5vw, 42px);
+    line-height:1.08; margin:0 0 10px; letter-spacing:-0.01em;
+  }
+  .hero h1 em{ font-style:normal; color:var(--crimson); }
+  .hero p{ font-size:15.5px; color:#4A5164; max-width:46ch; margin:0 0 26px; line-height:1.55; }
+
+  form.search{ display:flex; gap:10px; max-width:440px; }
+  .search input{
+    flex:1; font-family:'IBM Plex Mono', monospace; font-size:17px; letter-spacing:0.04em;
+    padding:14px 16px; border-radius:10px; border:1.5px solid var(--line);
+    background:var(--paper-2); color:var(--ink); outline:none;
+    transition:border-color .15s ease, box-shadow .15s ease;
+  }
+  .search input::placeholder{color:#9AA2B4; letter-spacing:0.02em;}
+  .search input:focus{ border-color:var(--ink); box-shadow:0 0 0 3px rgba(22,33,62,0.08); }
+  .search input:disabled{ opacity:.55; }
+  .search button{
+    font-family:'IBM Plex Sans', sans-serif; font-weight:600; font-size:15px;
+    padding:0 24px; border-radius:10px; border:none; background:var(--ink); color:#fff;
+    cursor:pointer; transition:background .15s ease, transform .1s ease;
+  }
+  .search button:hover{background:#222E52;}
+  .search button:active{transform:translateY(1px);}
+  .search button:disabled{ background:#9AA2B4; cursor:not-allowed; }
+
+  .hint{ font-size:12.5px; color:#8A90A2; margin-top:10px; }
+
+  .status{ max-width:440px; margin-top:22px; font-size:14.5px; color:var(--crimson); display:none; }
+  .status.show{display:block;}
+  .status.neutral{ color:#5B6478; }
+
+  .slip-wrap{ width:100%; max-width:440px; margin-top:30px; display:none; }
+  .slip-wrap.show{display:block;}
+  .slip{
+    position:relative; background:var(--paper-2); border-radius:16px;
+    box-shadow:var(--shadow); overflow:hidden; animation:rise .45s cubic-bezier(.2,.8,.2,1);
+  }
+  @keyframes rise{ from{opacity:0; transform:translateY(14px);} to{opacity:1; transform:translateY(0);} }
+
+  .slip-top{
+    padding:22px 24px 20px;
+    background: repeating-linear-gradient(135deg, rgba(179,18,46,0.035) 0 10px, transparent 10px 20px), var(--paper-2);
+  }
+  .slip-eyebrow{ font-size:11px; letter-spacing:0.12em; text-transform:uppercase; color:var(--brass); font-weight:600; margin-bottom:10px; }
+  .slip-name{ font-family:'Fraunces', serif; font-weight:600; font-size:22px; margin:0 0 14px; line-height:1.2; }
+  .slip-meta{ display:flex; flex-wrap:wrap; gap:8px 22px; font-size:13px; color:#4A5164; }
+  .slip-meta b{ color:var(--ink); font-family:'IBM Plex Mono', monospace; font-weight:600; }
+
+  .perf{ position:relative; height:0; }
+  .perf::before{
+    content:""; position:absolute; top:-11px; left:-11px; right:-11px; height:22px;
+    background-image: radial-gradient(circle 11px, var(--paper) 11px, transparent 11.5px);
+    background-size:26px 22px; background-repeat:repeat-x; background-position: -6px 0;
+  }
+  .perf::after{ content:""; position:absolute; top:0; left:16px; right:16px; border-top:2px dashed var(--line); }
+
+  .slip-bottom{ padding:26px 24px 24px; display:flex; align-items:center; justify-content:space-between; gap:18px; }
+  .rb{ text-align:left; }
+  .rb .label{ font-size:10.5px; letter-spacing:0.12em; text-transform:uppercase; color:#8A90A2; margin-bottom:4px; }
+  .rb .value{ font-family:'IBM Plex Mono', monospace; font-weight:700; font-size:34px; color:var(--ink); line-height:1; }
+  .rb.bench .value{ color:var(--crimson); }
+  .seal{
+    flex:0 0 auto; width:72px;height:72px; border-radius:50%; border:2px solid var(--green);
+    display:flex; align-items:center; justify-content:center; transform:rotate(-8deg); color:var(--green);
+  }
+  .seal svg{width:30px;height:30px;}
+  .slip-date{ padding:12px 24px 18px; font-size:12px; color:#8A90A2; border-top:1px solid var(--line); }
+  .slip-date b{ color:#4A5164; }
+
+  .spinner{
+    width:16px;height:16px;border-radius:50%;
+    border:2px solid rgba(22,33,62,0.15); border-top-color:var(--ink);
+    display:inline-block; vertical-align:-3px; margin-right:8px;
+    animation:spin .7s linear infinite;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  footer{ margin-top:auto; padding-top:60px; font-size:12px; color:#9AA2B4; text-align:center; }
+
+  @media (max-width:480px){ .search{flex-direction:column;} .search button{padding:13px 0;} }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="crest">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M4 20V4h7.2c3.3 0 5.6 1.9 5.6 4.9 0 2-1.1 3.5-2.9 4.2L17.5 20h-3.6l-3-6.4H7.3V20H4Zm3.3-9.1h3.6c1.6 0 2.6-.8 2.6-2s-1-2-2.6-2H7.3v4Z" fill="#EEF1F6"/>
+      </svg>
+    </div>
+    <div class="brandtext">
+      <div class="name">D R Junior College</div>
+      <div class="tag">Hyderabad · Exam Cell</div>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1>Find your <em>exam seat</em></h1>
+    <p>Enter your admission ID below to see the room and bench assigned to you for the exam.</p>
+
+    <form class="search" id="searchForm" autocomplete="off">
+      <input type="text" id="idInput" inputmode="numeric" placeholder="Loading seating data…" disabled />
+      <button type="submit" id="searchBtn" disabled>Find</button>
+    </form>
+    <div class="hint">Your admission ID is printed on your college ID card.</div>
+    <div class="status" id="statusMsg"></div>
+  </div>
+
+  <div class="slip-wrap" id="slipWrap">
+    <div class="slip">
+      <div class="slip-top">
+        <div class="slip-eyebrow" id="slipEyebrow">Weekend Examination</div>
+        <div class="slip-name" id="slipName">—</div>
+        <div class="slip-meta">
+          <span>ID <b id="slipId">—</b></span>
+          <span>Section <b id="slipSec">—</b></span>
+          <span>Course <b id="slipCourse">—</b></span>
+        </div>
+      </div>
+      <div class="perf"></div>
+      <div class="slip-bottom">
+        <div class="rb">
+          <div class="label">Room</div>
+          <div class="value" id="slipRoom">—</div>
+        </div>
+        <div class="seal">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 6 9 17l-5-5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="rb bench">
+          <div class="label">Bench</div>
+          <div class="value" id="slipBench">—</div>
+        </div>
+      </div>
+      <div class="slip-date">Exam date: <b id="slipDate">—</b></div>
+    </div>
+  </div>
+
+  <footer>D R Junior College · Seating Lookup</footer>
+
+<script>
+  // ====================== CONFIGURE THIS ======================
+  // 1. Create a Google Sheet with columns (exact header names, row 1):
+  //      ID | Name | Section | Group | Course | Room | Bench | ExamDate
+  // 2. Share it: "Anyone with the link" -> Viewer.
+  // 3. Copy the long ID from its URL:
+  //      https://docs.google.com/spreadsheets/d/  THIS_PART  /edit
+  // 4. Paste it below. If your data is on a tab other than "Sheet1",
+  //    update SHEET_NAME to match that tab's name exactly.
+  const SHEET_ID   = "1uzL8LRKUs58h-nyXBiEl_UuxGY8LjmWS-c4e6wrJgxI";
+  const SHEET_NAME = "Sheet1";
+  // ==============================================================
+
+  const CSV_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
+
+  const idInput  = document.getElementById('idInput');
+  const searchBtn = document.getElementById('searchBtn');
+  const form = document.getElementById('searchForm');
+  const status = document.getElementById('statusMsg');
+  const slipWrap = document.getElementById('slipWrap');
+
+  let SEATING = {}; // built from the sheet after fetch
+
+  function setStatus(msg, neutral){
+    status.textContent = msg;
+    status.classList.toggle('neutral', !!neutral);
+    status.classList.add('show');
+  }
+
+  // Minimal CSV parser that handles quoted fields containing commas.
+  function parseCSV(text){
+    const rows = [];
+    let row = [], field = '', inQuotes = false;
+    for(let i=0; i<text.length; i++){
+      const c = text[i], next = text[i+1];
+      if(inQuotes){
+        if(c === '"' && next === '"'){ field += '"'; i++; }
+        else if(c === '"'){ inQuotes = false; }
+        else { field += c; }
+      } else {
+        if(c === '"'){ inQuotes = true; }
+        else if(c === ','){ row.push(field); field=''; }
+        else if(c === '\n' || c === '\r'){
+          if(field !== '' || row.length){ row.push(field); rows.push(row); }
+          field=''; row=[];
+          if(c === '\r' && next === '\n') i++;
+        } else { field += c; }
+      }
+    }
+    if(field !== '' || row.length){ row.push(field); rows.push(row); }
+    return rows;
+  }
+
+  function buildLookup(rows){
+    if(!rows.length) return {};
+    const header = rows[0].map(h => h.trim().toLowerCase());
+    const idx = {
+      id: header.indexOf('id'),
+      name: header.indexOf('name'),
+      sec: header.indexOf('section'),
+      group: header.indexOf('group'),
+      course: header.indexOf('course'),
+      room: header.indexOf('room'),
+      bench: header.indexOf('bench'),
+      date: header.indexOf('examdate'),
+    };
+    const lookup = {};
+    for(let i=1; i<rows.length; i++){
+      const r = rows[i];
+      if(!r || !r[idx.id]) continue;
+      const id = String(r[idx.id]).trim();
+      if(!id) continue;
+      lookup[id] = {
+        name: r[idx.name] || '',
+        sec: r[idx.sec] || '',
+        group: r[idx.group] || '',
+        course: r[idx.course] || '',
+        room: r[idx.room] || '',
+        bench: r[idx.bench] || '',
+        exam_date: r[idx.date] || '',
+      };
+    }
+    return lookup;
+  }
+
+  async function loadSeating(){
+    try{
+      const res = await fetch(CSV_URL, { cache: 'no-store' });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const text = await res.text();
+      const rows = parseCSV(text);
+      SEATING = buildLookup(rows);
+      idInput.disabled = false;
+      searchBtn.disabled = false;
+      idInput.placeholder = 'Admission ID, e.g. 250198';
+      idInput.focus();
+    } catch(err){
+      setStatus('Could not load seating data right now. Please try again in a moment, or contact the exam cell.');
+      console.error(err);
+    }
+  }
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    const id = idInput.value.trim();
+    status.classList.remove('show');
+    slipWrap.classList.remove('show');
+
+    if(!id){ setStatus('Please enter your admission ID.'); return; }
+
+    const record = SEATING[id];
+    if(!record){
+      setStatus('No seating found for that ID. Check the number and try again, or contact the exam cell.');
+      return;
+    }
+
+    document.getElementById('slipName').textContent = (record.name || '').trim();
+    document.getElementById('slipId').textContent = id;
+    document.getElementById('slipSec').textContent = record.sec;
+    document.getElementById('slipCourse').textContent = record.course;
+    document.getElementById('slipRoom').textContent = record.room;
+    document.getElementById('slipBench').textContent = record.bench;
+    document.getElementById('slipDate').textContent = record.exam_date;
+
+    slipWrap.classList.remove('show');
+    void slipWrap.offsetWidth;
+    slipWrap.classList.add('show');
+  });
+
+  loadSeating();
+</script>
+</body>
+</html>
